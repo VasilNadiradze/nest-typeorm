@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto, UpdateItemDto } from './dto';
 
@@ -7,13 +7,29 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Post()
-  create(@Body() createItemDto: CreateItemDto) {
+  async create(@Body() createItemDto: CreateItemDto) {
     return this.itemsService.create(createItemDto);
   }
 
   @Get()
-  findAll() {
-    return this.itemsService.findAll();
+  async findAll() {
+    try {
+      const items = await this.itemsService.findAll();
+      return { 
+        success: true, 
+        message: 'Items retrieved successfully' ,
+        data: items, 
+      };
+    } catch (error) {
+      throw new HttpException(
+        { 
+          success: false, 
+          message: 'Failed to retrieve items', 
+          error: error.message 
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get(':id')

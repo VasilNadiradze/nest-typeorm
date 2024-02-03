@@ -1,15 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { EntityManager, Repository } from 'typeorm';
+import { Item } from './entities/item.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ItemsService {
-  create(createItemDto: CreateItemDto) {
-    return 'This action adds a new item';
+  constructor(
+    @InjectRepository(Item)
+    private readonly itemsRepository: Repository<Item>,
+    private readonly entityManager: EntityManager,
+  ) {}
+
+  async create(createItemDto: CreateItemDto) {
+    const item = new Item(createItemDto);
+    await this.entityManager.save(item);
   }
 
-  findAll() {
-    return `This action returns all items`;
+  async findAll() {
+    try {
+      const items = await this.itemsRepository.find();
+      return items;
+    } catch (error) {
+      throw new Error('Failed to retrieve items from the database.');
+    }
   }
 
   findOne(id: number) {

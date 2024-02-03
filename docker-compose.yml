@@ -5,3 +5,6 @@ services:
       - .env
     ports:
       - '3306:3306'
+
+# თავდაპირველად : docker compose up --build
+# შემდეგ ჯერზე : docker compose start
