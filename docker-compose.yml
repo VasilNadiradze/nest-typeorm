@@ -6,5 +6,5 @@ services:
     ports:
       - '3306:3306'
 
-# თავდაპირველად : docker compose up --build
+# პროექტის პირველი გაშვებისას : docker compose up --build
 # შემდეგ ჯერზე : docker compose start

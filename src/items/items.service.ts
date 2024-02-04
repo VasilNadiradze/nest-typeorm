@@ -31,11 +31,33 @@ export class ItemsService {
     return `This action returns a #${id} item`;
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async update(id: number, updateItemDto: UpdateItemDto) {
+    // const item = await this.itemsRepository.findOneBy({ id });
+    // item.public = updateItemDto.public;
+    // const comments = updateItemDto.comments.map(
+    //   (createCommentDto) => new Comment(createCommentDto),
+    // );
+    // item.comments = comments;
+    // await this.entityManager.save(item);
+
+    await this.entityManager.transaction(async (entityManager) => {
+      const item = await this.itemsRepository.findOneBy({ id });
+      item.name = updateItemDto.name;
+      item.public = updateItemDto.public;      
+      await entityManager.save(item);
+    });
   }
 
   remove(id: number) {
     return `This action removes a #${id} item`;
   }
 }
+
+/*
+  როგორც წესი, სერვისებში ხდება ხოლმე ბიზნეს-ლოგიკისა და კონკრეტულ მოთხოვნასთან დაკავშირებული
+  ოპერაციების აღწერა. ეს საშუალებას გვაძლევს დავწეროთ შედარებით მოქნილი და ადვილად აღქმადი კოდი.
+  ასევე ხდება კონკრეტული ფუნქციონალების ინკაფსულაცია, განცალკევება და შესაძლებელია ამ ინკაფსულირებული
+  ფუნქციონალების ნებისმიერ ადგილას გამოყენება დამოკიდებულებათა ინექციის გზით.  სწორედ ამ ინექციის
+  შესაძლებლობას გამოხატავს სერვისზე წინ დართული @Injectable() დეკორატორი. ეს იმას ნიშნავს, რომ
+  სერვისი შეგვიძლია წავიღოთ იქ სადაც გვინდა :))
+*/
