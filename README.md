@@ -1,27 +1,24 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://vnadiradze.ge" target="blank"><img src="https://vnadiradze.ge/img/share.jpg" width="500" alt="vnadiradze.ge" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-## Description
+## აღწერა
 
 აღწერა განთავსდება აქ
 
-## Installation
+## ინსტალაცია
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## პროექტის გაშვება
 
 ```bash
-# development
+# წარმოების რეჟიმი (development)
 $ npm run start
 
-# watch mode
+# სინქრონული ცვლილებების რეჟიმი (watch mode)
 $ npm run start:dev
 
 ```
