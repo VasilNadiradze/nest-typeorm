@@ -7,10 +7,13 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  // სვაგერი (https://swagger.io/docs/specification/2-0/what-is-swagger/) :
+  /*
+     სვაგერი (https://swagger.io/docs/specification/2-0/what-is-swagger/).
+     იხილეთ nest-cli.json ფაილიც.
+  */ 
   const options = new DocumentBuilder()
   .setTitle('NestJS TypeOrm') // სვაგერის დოკუმენტის სათაური
-  .setDescription('NestJS + Typeorm + MySql application') // სვაგერის დოკუმენტის აღწერა
+  .setDescription('NestJS + Typeorm + MySql აპლიკაცია') // სვაგერის დოკუმენტის აღწერა
   .setVersion('1.0') // აპლიკაციის მიმდინარე ვერსია სვაგერის დოკუმენტში
   .build();
   const document = SwaggerModule.createDocument(app, options);

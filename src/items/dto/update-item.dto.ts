@@ -1,7 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 import { CreateItemDto } from './create-item.dto';
+import { CreateCommentDto } from './create-comment.dto';
+import { CreateTagDto } from './create-tag.dto';
 
-export class UpdateItemDto extends PartialType(CreateItemDto) {}
+export class UpdateItemDto extends PartialType(CreateItemDto) {
+    comments: CreateCommentDto[];
+    tags: CreateTagDto[];
+}
 
 /*
     PartialType ფუნქცია გვეხმარება უკვე არსებული რომელიმე DTO-ს აუცილებელი 

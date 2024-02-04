@@ -7,7 +7,9 @@ import {
   Param, 
   Delete, 
   HttpException, 
-  HttpStatus 
+  HttpStatus, 
+  NotFoundException,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto, UpdateItemDto } from './dto';
@@ -18,7 +20,17 @@ export class ItemsController {
 
   @Post()
   async create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
+    try {
+      const result = await this.itemsService.create(createItemDto);
+      return { 
+        message: 'პროდუქტი წარმატებით დაემატა', 
+        data: result 
+      };
+    } catch (error) {
+      throw new HttpException({ 
+        message: 'სამწუხაროდ პროდუქტი ვერ დაემატა', error 
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get()
@@ -27,13 +39,13 @@ export class ItemsController {
       const items = await this.itemsService.findAll();
       return { 
         success: true, 
-        message: 'Items retrieved successfully' ,
+        message: 'პროდუქტი წარმატებით ამოვიღეთ ბაზიდან' ,
         data: items, 
       };
     } catch (error) {
       throw new HttpException({ 
           success: false, 
-          message: 'Failed to retrieve items', 
+          message: 'სამწუხაროდ პროდუქტი ვერ ამოვიღეთ ბაზიდან', 
           error: error.message 
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -42,18 +54,63 @@ export class ItemsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const result = await this.itemsService.findOne(+id);
+      return { 
+        success: true, 
+        data: result, 
+        message: 'პროდუქტი წარმატებით მოიძებნა' 
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return { 
+          success: false, 
+          message: 'პროდუქტი ვერ მოიძებნა' 
+        };
+      } else {
+        throw new InternalServerErrorException('სერვერული ხარვეზი');
+      }
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(+id, updateItemDto);
+  async update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
+    try {
+      await this.itemsService.update(+id, updateItemDto);
+      return { 
+        success: true, 
+        message: 'პროდუქტი წარმატებით განახლდა' 
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return { 
+          success: false, 
+          message: 'პროდუქტი ვერ მოიძებნა' 
+        };
+      } else {
+        throw new InternalServerErrorException('სერვერული ხარვეზი');
+      }
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      const result = await this.itemsService.remove(+id);
+      return { 
+        message: `პროდუქტი ID: ${id} წარმატებით წაიშალა`, 
+        data: result 
+      };
+    } catch (error) {
+      throw new HttpException(
+        { 
+          message: `პროდუქტი ID: ${id} ვერ წაიშალა`, 
+          error 
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
 

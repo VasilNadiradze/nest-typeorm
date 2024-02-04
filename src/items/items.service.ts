@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
+import { 
+  BadRequestException, 
+  Injectable, 
+  InternalServerErrorException, 
+  NotFoundException 
+} from '@nestjs/common';
 import { EntityManager, Repository } from 'typeorm';
-import { Item } from './entities/item.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Comment, Description, Item, Tag } from './entities';
+import { CreateCommentDto, CreateItemDto, UpdateItemDto } from './dto';
 
 @Injectable()
 export class ItemsService {
@@ -14,8 +18,31 @@ export class ItemsService {
   ) {}
 
   async create(createItemDto: CreateItemDto) {
-    const item = new Item(createItemDto);
-    await this.entityManager.save(item);
+    try {
+
+      // დავაგენერიროთ პროდუქტის აღწერა 
+      const description = new Description({
+        ...createItemDto.description, // პროდუქტის შექმნისას მოთხოვნაში ჩაიდება აღწერაც შესაბამისი ველებით : description და rating
+      });
+
+      // შექმნისას მოთხოვნაში გამოგზავნილი ყველა ტეგისათვის შევქმნათ ახალი ტეგი
+      const tags = createItemDto.tags.map(
+        (createTagDto) => new Tag(createTagDto),
+      );
+
+      const item = new Item({
+        ...createItemDto,
+        description,
+        comments: [], // შექმნისას კომენტარები არ ექნება, ამიტომ ვუთითებთ ცარიელ მასივს
+        tags: tags
+      });
+
+      const result =await this.entityManager.save(item);
+
+      return result;
+    } catch (error) {
+      throw new Error('პროდუქტი ვერ დაემატა ბაზაში');
+    }
   }
 
   async findAll() {
@@ -23,34 +50,73 @@ export class ItemsService {
       const items = await this.itemsRepository.find();
       return items;
     } catch (error) {
-      throw new Error('Failed to retrieve items from the database.');
+      throw new Error('ვერ მოხერხდა პროდუქტის ამოღება ბაზიდან');
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: number) {
+    const item = await this.itemsRepository.findOne({ 
+      where: { id } ,
+      // ჩაიტვირთება რელაციებთან ერთად
+      relations: { 
+        description: true,
+        comments: true,
+        tags: true
+      } 
+    });
+
+    if (!item) {
+      throw new NotFoundException();
+    }
+
+    return item;
   }
 
   async update(id: number, updateItemDto: UpdateItemDto) {
-    // const item = await this.itemsRepository.findOneBy({ id });
-    // item.public = updateItemDto.public;
-    // const comments = updateItemDto.comments.map(
-    //   (createCommentDto) => new Comment(createCommentDto),
-    // );
-    // item.comments = comments;
-    // await this.entityManager.save(item);
+    try {
+      await this.entityManager.transaction(async (entityManager) => {
+        const item = await this.itemsRepository.findOneBy({ id });
 
-    await this.entityManager.transaction(async (entityManager) => {
-      const item = await this.itemsRepository.findOneBy({ id });
-      item.name = updateItemDto.name;
-      item.public = updateItemDto.public;      
-      await entityManager.save(item);
-    });
+        if (!item) {
+          throw new NotFoundException('პროდუქტი ვერ მოიძებნა');
+        }
+
+        item.name = updateItemDto.name;
+        item.public = updateItemDto.public;
+
+        // თუ მოთხოვნაში ჩადებულია კომენტარებიც
+        if (updateItemDto.comments) {
+          const comments = updateItemDto.comments.map(
+            (createCommentDto: CreateCommentDto) => new Comment(createCommentDto),
+          );
+          item.comments = comments;
+        }
+
+        await entityManager.save(item);
+      });
+
+      return { success: true, message: 'პროდუქტი წარმატებით განახლდა' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      } else {
+        // Internal server error
+        throw new InternalServerErrorException('სერვერული ხარვეზი');
+      }
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
-  }
+  async remove(id: number) {
+    const deleteResult = await this.itemsRepository.delete(id);
+
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`პროდუქტი ID: ${id} ვერ მოიძებნა`);
+    }
+
+    return `პროდუქტი ID: ${id} წარმატებით წაიშალა`;
+  }  
 }
 
 /*
