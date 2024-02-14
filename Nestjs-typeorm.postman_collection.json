@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "4319de3d-7b6c-43a6-b779-9f3f18a62b6a",
+		"name": "Nestjs-typeorm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5313651"
+	},
+	"item": [
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "Item create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"new items with comments & tags\",\n    \"public\" : true,\n    \"description\" : {\n        \"description\" : \"Desc text\",\n        \"rating\": 0\n    },\n    \"tags\" : [\n        { \"content\" : \"first tag\" },\n        { \"content\" : \"second tag\" }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/items",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Items update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"public\" : false,\n    \"comments\" : [\n        {\n            \"content\" : \"first comment\"\n        },\n        {\n            \"content\" : \"second comment\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/items/10",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"items",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Item show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/items/12",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"items",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Item delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/items/3",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"items",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Items list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/items",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"vaso\",\n    \"email\" : \"vasdfsdfso@gmail.com\",\n    \"password\" : \"zaqwsx123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/auth/signup",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"vaso@gmail.com\",\n    \"password\" : \"zaqwsx123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/auth/login",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "User list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzA3NTczOTM0LCJleHAiOjE3MDc4MzMxMzR9.OSe7je_EahJcwF_HMqko-uwtqUECGCCrLgrxPiMtkXc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/users",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzA3MzkxNTEzLCJleHAiOjE3MDc2NTA3MTN9.ps_x0O47MCYK2OqkAfmfT1Z9YDfwmq40qexFkEOZFbg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"vaso1\",\n    \"email\" : \"vddgggddt@gmail.com\",\n    \"password\" : \"zaqwsx123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/users",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzA3MzkxNTEzLCJleHAiOjE3MDc2NTA3MTN9.ps_x0O47MCYK2OqkAfmfT1Z9YDfwmq40qexFkEOZFbg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/users/1",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzA3MzkxNTEzLCJleHAiOjE3MDc2NTA3MTN9.ps_x0O47MCYK2OqkAfmfT1Z9YDfwmq40qexFkEOZFbg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{NEST_TYPEORM-URL}}/users/5",
+							"host": [
+								"{{NEST_TYPEORM-URL}}"
+							],
+							"path": [
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
