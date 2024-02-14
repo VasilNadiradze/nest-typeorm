@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ItemsModule } from './items/items.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -11,7 +13,9 @@ import { ItemsModule } from './items/items.module';
      */
     ConfigModule.forRoot({ isGlobal: true }), // მოდული ხელმისაწვდომია გლობალურად ანუ ყველგან
     DatabaseModule,
-    ItemsModule, 
+    ItemsModule,
+    UsersModule,
+    AuthModule
   ],
   exports: [],
   controllers: []

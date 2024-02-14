@@ -6,7 +6,7 @@ import {
   ManyToMany, 
   OneToMany, 
   OneToOne,
-  PrimaryGeneratedColumn, 
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Description } from './description.entity';
 import { Comment } from './comment.entity';
@@ -46,7 +46,7 @@ export class Item {
   @JoinTable({
     name: 'items_tags' // შუამავალი ცხრილი ტეგებისა და პროდუქტის id ველებით
   })
-  tags: Tag[];
+  tags: Tag[];  
 
   constructor(entity: Partial<Item>) {
     Object.assign(this, entity);
